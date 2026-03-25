@@ -1,0 +1,13 @@
+{
+  "name": "opencli-plugin-polymarket",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "OpenCLI plugin for Polymarket prediction market analysis",
+  "license": "MIT",
+  "peerDependencies": {
+    "@jackwener/opencli": "*"
+  },
+  "scripts": {
+    "postinstall": "node scripts/check-polymarket-cli.js"
+  }
+}
