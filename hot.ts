@@ -14,7 +14,7 @@ cli({
   columns: ['rank', 'question', 'yes', 'volume_24h', 'volume', 'end_date'],
   func: async (_page, kwargs) => {
     const limit = kwargs.limit ?? 20;
-    let url = `${GAMMA_API}/events?active=true&closed=false&order=volume_24hr&ascending=false&limit=${limit}`;
+    let url = `${GAMMA_API}/events?active=true&closed=false&order=volume&ascending=false&limit=${limit}`;
     if (kwargs.tag) {
       url += `&tag=${encodeURIComponent(kwargs.tag)}`;
     }

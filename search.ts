@@ -17,7 +17,7 @@ cli({
     const limit = kwargs.limit ?? 20;
 
     // Gamma API doesn't have a search parameter, so we fetch a large batch and filter client-side
-    const url = `${GAMMA_API}/events?active=true&closed=false&limit=200&order=volume_24hr&ascending=false`;
+    const url = `${GAMMA_API}/events?active=true&closed=false&limit=50&order=volume&ascending=false`;
     const events = await fetchJson(url);
     if (!Array.isArray(events)) return [];
 

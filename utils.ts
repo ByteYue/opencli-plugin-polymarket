@@ -10,10 +10,29 @@ const DATA_API = 'https://data-api.polymarket.com';
 export { GAMMA_API, CLOB_API, DATA_API };
 
 /**
- * Fetch JSON from a URL. Uses Node.js native fetch which respects
- * http_proxy/https_proxy environment variables via undici.
+ * Fetch JSON from a URL with proxy support.
+ * Uses curl (which natively respects http_proxy/https_proxy env vars)
+ * for reliable proxy support. Falls back to Node.js native fetch.
  */
 export async function fetchJson(url: string): Promise<any> {
+  const proxyUrl = process.env.https_proxy || process.env.HTTPS_PROXY ||
+                   process.env.http_proxy || process.env.HTTP_PROXY;
+
+  if (proxyUrl) {
+    // Use curl for proxy support — it natively respects proxy env vars
+    const { execFileSync } = await import('node:child_process');
+    try {
+      const result = execFileSync('curl', ['-s', '-f', '--connect-timeout', '10', url], {
+        encoding: 'utf-8',
+        maxBuffer: 10 * 1024 * 1024, // 10MB
+      });
+      return JSON.parse(result);
+    } catch (err: any) {
+      throw new Error(`Failed to fetch ${url}: ${err.message || err}`);
+    }
+  }
+
+  // No proxy — use native fetch
   const resp = await fetch(url);
   if (!resp.ok) {
     throw new Error(`HTTP ${resp.status} ${resp.statusText} from ${url}`);
